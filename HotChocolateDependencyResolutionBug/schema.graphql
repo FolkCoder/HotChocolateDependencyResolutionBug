@@ -1,0 +1,8 @@
+﻿type Query {
+  testClasses(): [TestClass!]
+}
+
+type TestClass {
+	id: ID!
+	name: String!
+}
