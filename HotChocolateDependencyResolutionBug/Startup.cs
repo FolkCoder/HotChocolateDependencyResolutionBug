@@ -16,11 +16,22 @@ namespace HotChocolateDependencyResolutionBug
 		{
 			services.AddScoped<ITestClassResolver, TestClassResolver>();
 
-            var requestExecutorBuilder = services
-                .AddGraphQLServer()
+			var requestExecutorBuilder = services
+				.AddGraphQLServer()
 				.AddDocumentFromFile("./schema.graphql")
-                .BindComplexType<TestClass>(b => b.To("TestClass"))
+				.BindComplexType<TestClass>(b => b.To("TestClass"));
+
+			// binding a concrete resolver instance works
+			/*
+			requestExecutorBuilder
 				.BindResolver<TestClassResolver>(resolver =>
+					resolver.To("Query")
+						.Resolve("testClasses").With(x => x.Resolve()));
+			*/
+
+			// binding a resolver interface does not
+			requestExecutorBuilder
+				.BindResolver<ITestClassResolver>(resolver =>
 					resolver.To("Query")
 						.Resolve("testClasses").With(x => x.Resolve()));
 		}
